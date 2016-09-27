@@ -15,6 +15,8 @@ class Reply
   attr_accessor :parent_id, :reply_author_id, :question_id, :body
   attr_reader :id
 
+  @@table = 'replies'
+
   def self.all
     data = ReplyDBConnection.instance.execute("SELECT * FROM replies")
     data.map { |datum| Reply.new(datum) }

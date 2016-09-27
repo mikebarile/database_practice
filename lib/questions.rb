@@ -15,6 +15,8 @@ class Question
   attr_accessor :title, :body, :author_id
   attr_reader :id
 
+  @@table = 'questions'
+
   def self.all
     data = QuestionDBConnection.instance.execute("SELECT * FROM questions")
     data.map { |datum| Question.new(datum) }

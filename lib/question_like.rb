@@ -15,6 +15,8 @@ class QuestionLike
   attr_accessor :liker_id, :question_id, :author_id
   attr_reader :id
 
+  @@table = 'question_likes'
+
   def self.all
     data = QuestionLikeDBConnection.instance.execute("SELECT * FROM questions")
     data.map { |datum| QuestionLike.new(datum) }

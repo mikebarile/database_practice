@@ -15,6 +15,8 @@ class QuestionFollow
   attr_accessor :title, :body, :author_id
   attr_reader :id
 
+  @@table = 'question_follows'
+
   def self.all
     data = QuestionFollowDBConnection.instance.execute("SELECT * FROM questions")
     data.map { |datum| QuestionFollow.new(datum) }

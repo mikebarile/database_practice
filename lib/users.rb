@@ -4,6 +4,7 @@ require_relative 'questions'
 require_relative 'replies'
 require_relative 'question_like'
 require_relative 'question_follow'
+require_relative 'ModelBase'
 
 class UserDBConnection < SQLite3::Database
   include Singleton
@@ -15,43 +16,45 @@ class UserDBConnection < SQLite3::Database
   end
 end
 
-class User
+class User < ModelBase
   attr_accessor :fname, :lname
   attr_reader :id
 
-  def self.all
-    data = UserDBConnection.instance.execute("SELECT * FROM users")
-    data.map { |datum| User.new(datum) }
-  end
+  TABLE = "users"
 
-  def self.find_by_id(id)
-    users = UserDBConnection.instance.execute(<<-SQL, id)
-      SELECT
-        *
-      FROM
-        users
-      WHERE
-        id = ?
-      SQL
-      return nil unless users.length > 0
+  # def self.all
+  #   data = UserDBConnection.instance.execute("SELECT * FROM users")
+  #   data.map { |datum| User.new(datum) }
+  # end
 
-      User.new(users.first)
-  end
+  # def self.find_by_id(id)
+  #   users = UserDBConnection.instance.execute(<<-SQL, id)
+  #     SELECT
+  #       *
+  #     FROM
+  #       users
+  #     WHERE
+  #       id = ?
+  #     SQL
+  #     return nil unless users.length > 0
+  #
+  #     User.new(users.first)
+  # end
 
 
-  def self.find_by_name(fname, lname)
-    users = UserDBConnection.instance.execute(<<-SQL, fname, lname)
-      SELECT
-        *
-      FROM
-        users
-      WHERE
-        fname = ? AND lname = ?
-      SQL
-      return nil unless users.length > 0
-
-      User.new(users.first)
-  end
+  # def self.find_by_name(fname, lname)
+  #   users = UserDBConnection.instance.execute(<<-SQL, fname, lname)
+  #     SELECT
+  #       *
+  #     FROM
+  #       users
+  #     WHERE
+  #       fname = ? AND lname = ?
+  #     SQL
+  #     return nil unless users.length > 0
+  #
+  #     User.new(users.first)
+  # end
 
   def initialize(options)
     @id = options['id']
@@ -115,5 +118,7 @@ class User
   end
 end
 
-mike = User.new({'id' => 9, 'fname' => 'donald', 'lname' => 'duck'})
-mike.create
+mike_hash = {'id' => 1}
+p User.where(mike_hash)
+p User.find_by_fname("Mike")
+p User.where("lname = 'Barile'")
