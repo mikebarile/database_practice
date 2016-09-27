@@ -59,6 +59,10 @@ class User
     @lname = options['lname']
   end
 
+  def followed_questions
+    QuestionFollow.followed_questions_for_user_id(@id)
+  end
+
   def authored_questions
     questions = Question.find_by_author_id(@id)
   end
@@ -67,8 +71,26 @@ class User
     replies = Reply.find_by_author(@id)
   end
 
+  def liked_questions
+    QuestionLike.liked_questions_for_user_id(user_id)
+  end
 
+  def average_karma(id = @id)
+    karma = UserDBConnection.instance.execute(<<-SQL, id)
+      WITH total_likes as (
+        SELECT question_id, count(liker_id) total_likes
+        FROM question_likes
+        WHERE author_id = ?
+        GROUP BY 1
+      )
+      SELECT avg(ql.total_likes)
+      FROM total_likes ql
+    SQL
+    return nil unless karma.length > 0
+
+    karma[0].values[0]
+  end
 end
-question = Question.find_by_id(1)
-mike = User.find_by_name('Mike', 'Barile')
-p question.author
+
+mike = User.find_by_id(1)
+p mike.average_karma
