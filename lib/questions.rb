@@ -55,5 +55,10 @@ class Question
     @author_id = options['author_id']
   end
 
+  def author
+    author = User.find_by_id(@author_id)
+    "#{author.fname} #{author.lname}"
+  end
+
 
 end
