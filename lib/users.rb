@@ -90,7 +90,30 @@ class User
 
     karma[0].values[0]
   end
+
+  def create
+    raise "#{self} already in database" if @id
+    UserDBConnection.instance.execute(<<-SQL, @fname, @lname, @id)
+      INSERT INTO
+        users (fname, lname, id)
+      VALUES
+        (?, ?, ?)
+    SQL
+    @id = UserDBConnection.instance.last_insert_row_id
+  end
+
+  def update
+    raise "#{self} not in database" unless @id
+    UserDBConnection.instance.execute(<<-SQL, @fname, @lname, @id)
+      UPDATE
+        users
+      SET
+        fname = ?, lname = ?
+      WHERE
+        id = ?
+    SQL
+  end
 end
 
-mike = User.find_by_id(1)
-p mike.average_karma
+mike = User.new({'id' => 9, 'fname' => 'donald', 'lname' => 'duck'})
+mike.create
