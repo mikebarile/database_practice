@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   id INTEGER PRIMARY KEY,
   fname VARCHAR(100) NOT NULL,
-  lname VARCHAR(100) NOT NULL,
+  lname VARCHAR(100) NOT NULL
 );
 
 DROP TABLE IF EXISTS questions;
@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS question_follows;
 CREATE TABLE question_follows (
   id INTEGER PRIMARY KEY,
   question_id INTEGER NOT NULL,
-  auther_id INTEGER NOT NULL,
+  author_id INTEGER NOT NULL,
   follower_id INTEGER NOT NULL,
 
   FOREIGN KEY(author_id) REFERENCES users(id),
@@ -82,4 +82,4 @@ INSERT INTO
   question_likes (liker_id, question_id, author_id)
 VALUES
   (3, 1, 1),
-  (4, 2, 2)
+  (4, 2, 2);
